@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">StudentFinanceTracker</string>
+
+    <string-array name="frequency_options">
+        <item>One-time</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+    </string-array>
+
 </resources>
