@@ -33,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
         Button btnAddExpense = findViewById(R.id.btnAddExpense);
         Button btnLogout = findViewById(R.id.btnLogout);
 
+        Button btnViewIncomes = findViewById(R.id.btnViewIncomes);
+        Button btnViewExpenses = findViewById(R.id.btnViewExpenses);
+
+
         dbHelper = new DatabaseHelper(this);
         session = new SessionManager(this);
 
@@ -46,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         String currentMonth = new SimpleDateFormat("MM", Locale.getDefault()).format(new Date());
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
+        // Load dashboard data
         double income = dbHelper.getTotalMonthlyIncome(userId, currentMonth);
         double expenses = dbHelper.getTotalMonthlyExpenses(userId, currentMonth);
         double saldo = income - expenses;
@@ -61,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
 
         btnAddExpense.setOnClickListener(v ->
                 startActivity(new Intent(this, AddExpenseActivity.class)));
+
+        btnViewIncomes.setOnClickListener(v ->
+                startActivity(new Intent(this, IncomeListActivity.class)));
+
+        btnViewExpenses.setOnClickListener(v ->
+                startActivity(new Intent(this, ExpenseListActivity.class)));
 
         btnLogout.setOnClickListener(v -> {
             session.logout();
