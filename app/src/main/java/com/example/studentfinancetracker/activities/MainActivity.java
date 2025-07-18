@@ -27,18 +27,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Init
         dbHelper = new DatabaseHelper(this);
         session = new SessionManager(this);
 
-        // Session check
         if (!session.isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         }
 
-        // Views
         textDate = findViewById(R.id.textDate);
         textIncome = findViewById(R.id.textTotalIncome);
         textExpense = findViewById(R.id.textTotalExpenses);
@@ -51,28 +48,18 @@ public class MainActivity extends AppCompatActivity {
         Button btnViewIncomes = findViewById(R.id.btnViewIncomes);
         Button btnViewExpenses = findViewById(R.id.btnViewExpenses);
 
-
-
-        // Event handlers
         btnLogout.setOnClickListener(v -> {
             session.logout();
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
 
-        btnAddIncome.setOnClickListener(v ->
-                startActivity(new Intent(this, AddIncomeActivity.class)));
+        btnAddIncome.setOnClickListener(v -> startActivity(new Intent(this, AddIncomeActivity.class)));
+        btnAddExpense.setOnClickListener(v -> startActivity(new Intent(this, AddExpenseActivity.class)));
+        btnViewIncomes.setOnClickListener(v -> startActivity(new Intent(this, IncomeListActivity.class)));
+        btnViewExpenses.setOnClickListener(v -> startActivity(new Intent(this, ExpenseListActivity.class)));
 
-        btnAddExpense.setOnClickListener(v ->
-                startActivity(new Intent(this, AddExpenseActivity.class)));
-
-        btnViewIncomes.setOnClickListener(v ->
-                startActivity(new Intent(this, IncomeListActivity.class)));
-
-        btnViewExpenses.setOnClickListener(v ->
-                startActivity(new Intent(this, ExpenseListActivity.class)));
-
-        handleRecurringExpenses();
+        handleRecurringExpenses();  // 🆕 includes weekly + monthly
         refreshDashboard();
     }
 
@@ -80,11 +67,18 @@ public class MainActivity extends AppCompatActivity {
         int userId = session.getUserId();
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         String thisMonth = new SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(new Date());
+        String thisWeek = new SimpleDateFormat("yyyy-'W'ww", Locale.getDefault()).format(new Date());
 
         String lastMonthRun = session.getLastRecurringUpdate("lastMonthlyRun");
         if (!thisMonth.equals(lastMonthRun)) {
-            dbHelper.generateRecurringEntries(userId, today);
+            dbHelper.generateMonthlyRecurringEntries(userId, today);
             session.setLastRecurringUpdate("lastMonthlyRun", thisMonth);
+        }
+
+        String lastWeekRun = session.getLastRecurringUpdate("lastWeeklyRun");
+        if (!thisWeek.equals(lastWeekRun)) {
+            dbHelper.generateWeeklyRecurringEntries(userId, today);
+            session.setLastRecurringUpdate("lastWeeklyRun", thisWeek);
         }
     }
 
@@ -93,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         String currentMonth = new SimpleDateFormat("MM", Locale.getDefault()).format(new Date());
 
-        double income = dbHelper.getTotalMonthlyIncome(userId, currentMonth);
-        double expenses = dbHelper.getTotalMonthlyExpenses(userId, currentMonth);
+        double income = dbHelper.getTotalIncomeForCurrentMonth(userId);
+        double expenses = dbHelper.getTotalExpensesForCurrentMonth(userId);
         double saldo = income - expenses;
 
         DecimalFormat df = new DecimalFormat("#0.00");
