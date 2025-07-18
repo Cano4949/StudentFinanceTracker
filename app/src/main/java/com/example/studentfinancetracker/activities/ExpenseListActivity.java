@@ -3,10 +3,10 @@ package com.example.studentfinancetracker.activities;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.studentfinancetracker.R;
+import com.example.studentfinancetracker.adapters.ExpenseAdapter;
 import com.example.studentfinancetracker.database.DatabaseHelper;
 import com.example.studentfinancetracker.utils.SessionManager;
 
@@ -15,6 +15,7 @@ public class ExpenseListActivity extends AppCompatActivity {
     private ListView listView;
     private DatabaseHelper dbHelper;
     private SessionManager session;
+    private ExpenseAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +27,15 @@ public class ExpenseListActivity extends AppCompatActivity {
         session = new SessionManager(this);
 
         Cursor cursor = dbHelper.getAllExpenses(session.getUserId());
-
-        String[] from = {"title", "amount", "frequency", "date"};
-        int[] to = {R.id.textTitle, R.id.textAmount, R.id.textFrequency, R.id.textDate};
-
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-                R.layout.list_item_expense, cursor, from, to, 0);
-
+        adapter = new ExpenseAdapter(this, cursor);
         listView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (adapter != null && adapter.getCursor() != null) {
+            adapter.getCursor().close();
+        }
     }
 }

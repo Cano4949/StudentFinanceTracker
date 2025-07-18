@@ -26,11 +26,16 @@ public class LoginActivity extends AppCompatActivity {
         session = new SessionManager(this);
 
         findViewById(R.id.btnLogin).setOnClickListener(view -> {
-            String user = username.getText().toString();
-            String pass = password.getText().toString();
+            String user = username.getText().toString().trim();
+            String pass = password.getText().toString().trim();
 
-            if (dbHelper.checkUser(user, pass)) {
-                int userId = dbHelper.getUserId(user);
+            if (user.isEmpty() || pass.isEmpty()) {
+                Toast.makeText(this, "Please enter all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int userId = dbHelper.loginUser(user, pass);
+            if (userId != -1) {
                 session.createLoginSession(userId);
                 startActivity(new Intent(this, MainActivity.class));
                 finish();

@@ -1,60 +1,121 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:padding="24dp">
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".activities.MainActivity">
 
+    <!-- Top Bar: Date + Logout -->
+    <TextView
+        android:id="@+id/textDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Today"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_alignParentStart="true"/>
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:layout_alignParentEnd="true"/>
+
+    <!-- Pie Chart -->
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pieChart"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@id/textDate"
+        android:layout_marginTop="12dp" />
+
+    <!-- Income / Expenses / Saldo -->
     <LinearLayout
+        android:id="@+id/summaryBox"
+        android:layout_below="@id/pieChart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_width="match_parent" android:layout_height="wrap_content">
+        android:padding="12dp">
 
         <TextView
             android:id="@+id/textTotalIncome"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="Income: $" android:textSize="18sp"
-            android:layout_marginBottom="12dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Income: $0.00"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/textTotalExpenses"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="Expenses: $" android:textSize="18sp"
-            android:layout_marginBottom="12dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expenses: $0.00"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/textSaldo"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="Saldo: $" android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Saldo: $0.00"
             android:textStyle="bold"
-            android:layout_marginBottom="12dp" />
+            android:textSize="18sp"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
 
-        <TextView
-            android:id="@+id/textNextExpense"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="Next Expense: " android:textSize="16sp"
-            android:layout_marginBottom="24dp" />
-
-        <Button
-            android:id="@+id/btnAddIncome"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="Add Income" android:layout_marginBottom="12dp" />
-
-        <Button
-            android:id="@+id/btnAddExpense"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="Add Expense" android:layout_marginBottom="12dp" />
-
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="Logout" />
+    <!-- Income / Expense List Buttons -->
+    <LinearLayout
+        android:id="@+id/buttonRow"
+        android:layout_below="@id/summaryBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:gravity="center">
 
         <Button
             android:id="@+id/btnViewIncomes"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="View Incomes" android:layout_marginTop="24dp" />
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="View Incomes" />
+
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/btnViewExpenses"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:text="View Expenses" />
-
     </LinearLayout>
-</ScrollView>
+
+    <!-- Bottom Right: Add Buttons (Text version) -->
+    <LinearLayout
+        android:id="@+id/fabContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp">
+
+        <Button
+            android:id="@+id/btnAddExpense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Expense"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnAddIncome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Income"/>
+    </LinearLayout>
+
+</RelativeLayout>
